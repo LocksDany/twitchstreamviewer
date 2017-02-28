@@ -1,37 +1,38 @@
-$(document).ready(function(){
-
-var users = ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas", "faker", "ESL_LOL", "TSM_Dyrus", "SidecarAngel", "UnicornDev", "MushIsGosu", "tvBREKAN", "idolmariya", "comster404"];
+var users = ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas", "faker", "ESL_LOL", "TSM_Dyrus", "SidecarAngel", "UnicornDev", "MushIsGosu", "tvBREKAN", "idolmariya", "comster404", "brunofin"];
 var html = '';
 var ready = 0;
 var readyChannel = 0;
 var Channel = [];    
 var Streams = [];
+var clicked = false;
 
+$(document).ready(function(){
 
-function filter404(c){
-    if(c.status == 404){
-        $('#' + c.display_name).attr('disabled','disabled');
-        $("#" + c.display_name + 'Status').html("Doesn't Exist");
-        console.log('found');
-    }
-}
-    
-    
-function getStream(channel){
-
-$.getJSON("https://wind-bow.gomix.me/twitch-api/channels/" + channel, function(c){
-
+//Get Channel Info
+function getChannel(channel){
+    $.getJSON("https://wind-bow.gomix.me/twitch-api/channels/" + channel, function(c){
     Channel.push(c);
     readyChannel++;
-    
+        
+        if(c.status == 404){
+            
+            $('#' + channel + 'Status').html('<h4 style="color:Red">' + c.message + '</h4>');
+            console.log('found ' + channel);
+            
+        }
+
 });
-    
+}
+
+    //Get Streaming Info
+function getStream(channel){
     
     
 $.getJSON("https://wind-bow.gomix.me/twitch-api/streams/" + channel, function(json){
     
     Streams.push(json);
     
+    //Set HTML If it's Streaming
     function setHtmlSuccess(Game){
         
         html += '<a href="https://www.twitch.tv/' + channel + '/">';
@@ -54,13 +55,14 @@ $.getJSON("https://wind-bow.gomix.me/twitch-api/streams/" + channel, function(js
         
     }
     
+    //Set Html if it's not Streaming
     function setHtmlFail() {
         
         html += '<div class="col-md-4 twitch-stream offline" id="' + channel + '"'; 
         
         html += ' style="background-image:url(\'https://www.overclock3d.net/gfx/articles/2015/07/01065404146l.jpg\')">';
         
-        html += '<div class="content row"><p class="col-md-12" id="'+ channel +'Status">' + channel + ' is currently offline</p>';
+        html += '<div class="content row"><p class="col-md-12" id="'+ channel +'Status">'+ channel +' is currently offline</p>';
         
         html += '<br><br><br><br><br><br><br><br><br><br><br><br><br>';
         
@@ -70,6 +72,7 @@ $.getJSON("https://wind-bow.gomix.me/twitch-api/streams/" + channel, function(js
         
     }
     
+    //If it's Streaming
     if(json.stream != null){
         
         
@@ -90,31 +93,57 @@ $.getJSON("https://wind-bow.gomix.me/twitch-api/streams/" + channel, function(js
             
         }
         
+        //Set Game Name if it is short enough
         setHtmlSuccess(json.stream.game);
         
+        // If it's not Streaming
         } else {
-            
+
             setHtmlFail();
             
         }
+    
+    //Add 1 count to ready var
     ready += 1;
+    
+    //When the count reaches the end
     if(ready == users.length){
+        
         $('#streams').html(html);
         
-        for(var i = 0; i<Channel.length;i++){
-            filter404(Channel[i]);
-        }
+        getAllStreams(getChannel);
         
     }
     });}
 
-function getAllStreams(){
+//Repeat function for all Channels
+function getAllStreams(funct){
     for(var i = 0; i < users.length; i++){
-        getStream(users[i]);
+        funct(users[i]);
 }
 }
     
-getAllStreams(); 
+$('#displayOffline').on('click', function(){
+    
+   if(clicked == false){
+       $('.offline').addClass('displayNone')
+       $('#displayOffline').html('Enable Offline');
+       $('#displayOffline').css('color', '#F7F7F7');
+       $('#displayOffline').css('background-color', '#6341A5');
+       clicked = true;
+   } else {
+       $('.offline').removeClass('displayNone');
+       $('#displayOffline').html('Disable Offline');
+       $('#displayOffline').css('color', '#6341A5');
+       $('#displayOffline').css('background-color', '#F7F7F7');
+       clicked = false;
+   }
+    
+});
+
+getAllStreams(getStream);
+    
 console.log(Channel);
 console.log(Streams);
 });
+

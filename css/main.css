@@ -10,7 +10,6 @@ a{
 }
 
 .main-block {
-    width: 100%;
 }
 
 .title {
@@ -18,8 +17,22 @@ a{
     font-size: 50px;
     font-family: 'Francois One';
     color: #6341A5;
-    margin: 0px -15px 10px -15px;
+    margin: 0px -15px 10px 0px!important;
     padding: 10px 0px 10px 0px ;
+    float: none;
+    margin: 0 auto;
+}
+
+#displayOffline {
+    border-radius: 5px;
+    margin: 15px 0px 0px -200px;
+    font-size: 25px;
+    background-color: #F7F7F7; 
+    color: #6341A5;
+}
+
+.displayNone{
+    display: none;
 }
 
 .streams {
