@@ -10,7 +10,13 @@ $(document).ready(function(){
 
 //Get Channel Info
 function getChannel(channel){
-    $.getJSON("https://wind-bow.gomix.me/twitch-api/channels/" + channel, function(c){
+    $.ajax({
+    
+        url: "https://wind-bow.gomix.me/twitch-api/channels/" + channel,
+        type: "GET",
+        dataType: "jsonp",
+        success: function(c){
+        
     Channel.push(c);
     readyChannel++;
         
@@ -21,7 +27,11 @@ function getChannel(channel){
             
         }
 
-});
+},
+        xhrFields: {
+            withCredentials:false
+        }
+    });
 }
 
     //Get Streaming Info
