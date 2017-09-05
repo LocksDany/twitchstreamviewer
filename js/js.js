@@ -30,7 +30,7 @@ function getStream(channel){
     
 $.ajax({
     
-    url: "http://wind-bow.gomix.me/twitch-api/streams/" + channel,      
+    url: "https://wind-bow.gomix.me/twitch-api/streams/" + channel,      
     type: "GET",
     dataType: "jsonp",
     success: function(json){
