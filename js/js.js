@@ -28,7 +28,12 @@ function getChannel(channel){
 function getStream(channel){
     
     
-$.getJSON("https://wind-bow.gomix.me/twitch-api/streams/" + channel, function(json){
+$.ajax({
+    
+    url: "http://wind-bow.gomix.me/twitch-api/streams/" + channel,      
+    type: "GET",
+    dataType: "jsonp",
+    success: function(json){
     
     Streams.push(json);
     
@@ -114,7 +119,13 @@ $.getJSON("https://wind-bow.gomix.me/twitch-api/streams/" + channel, function(js
         getAllStreams(getChannel);
         
     }
-    });}
+    },
+    
+    xhrFields: {
+        withCredentials:false
+    }
+    
+});}
 
 //Repeat function for all Channels
 function getAllStreams(funct){
